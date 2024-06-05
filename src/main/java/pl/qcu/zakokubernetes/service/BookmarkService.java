@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.qcu.zakokubernetes.controller.dto.BookmarkDto;
 import pl.qcu.zakokubernetes.controller.dto.BookmarksDto;
-import pl.qcu.zakokubernetes.controller.mapper.BookmarkMapper;
+import pl.qcu.zakokubernetes.controller.request.CreateBookmarkRequest;
+import pl.qcu.zakokubernetes.model.Bookmark;
 import pl.qcu.zakokubernetes.model.BookmarkRepository;
+
+import java.time.Instant;
 
 import static pl.qcu.zakokubernetes.controller.mapper.BookmarkMapper.toDto;
 
@@ -34,5 +37,11 @@ public class BookmarkService {
         Pageable pageable = PageRequest.of(pageNo, 2, Sort.Direction.DESC, "createdAt");
         Page<BookmarkDto> bookmarks = bookmarkRepository.findByTitleContainsIgnoreCase(query, pageable);
         return new BookmarksDto(bookmarks);
+    }
+
+    public BookmarkDto createBookmark(CreateBookmarkRequest createBookmarkRequest) {
+        Bookmark bookmark = new Bookmark(null, createBookmarkRequest.getTitle(), createBookmarkRequest.getUrl(), Instant.now());
+        Bookmark saved = bookmarkRepository.save(bookmark);
+        return toDto(saved);
     }
 }

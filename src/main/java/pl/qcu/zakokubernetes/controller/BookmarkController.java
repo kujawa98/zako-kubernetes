@@ -1,11 +1,12 @@
 package pl.qcu.zakokubernetes.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import pl.qcu.zakokubernetes.controller.dto.BookmarkDto;
 import pl.qcu.zakokubernetes.controller.dto.BookmarksDto;
+import pl.qcu.zakokubernetes.controller.request.CreateBookmarkRequest;
 import pl.qcu.zakokubernetes.service.BookmarkService;
 
 @RestController
@@ -21,6 +22,12 @@ public class BookmarkController {
             return bookmarkService.getBookmarks(page);
         }
         return bookmarkService.searchBookmarks(query,page);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BookmarkDto addBookmark(@RequestBody @Valid CreateBookmarkRequest createBookmarkRequest) {
+        return bookmarkService.createBookmark(createBookmarkRequest);
     }
 
 
